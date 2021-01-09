@@ -9,7 +9,6 @@ import java.util.Comparator;
 public class Sort <T> {
 	
 	
-	
 	public static <T> void selectionSort(T V[], Comparator<T> comparator) {
 		for (int i = 0; i < V.length - 1; i++) {
 			int m = i;
@@ -23,12 +22,12 @@ public class Sort <T> {
 			}
 		}
 	}
-	
-	
+		
 	public static <T> void mergeSort(T V[], Comparator<T> comparator) {
 		mergeRec(V, comparator, 0, V.length -1);
 		
 	}
+	
 	private static <T> void mergeRec(T V[], Comparator<T> comparator, int i, int f) {
 		if (i < f) {
 			int m = (i + f) / 2;
@@ -52,8 +51,7 @@ public class Sort <T> {
 		else for (int j = i2; j <= f2; j++, i++) X[i] = V[j];
 		for (int t = 0; k <= f2; k++, t++) V[k] = X[t];
 	}
-	
-	
+		
 	public static class sortMovieByTitle implements Comparator<Movie>{
 		
 		@Override
@@ -65,8 +63,7 @@ public class Sort <T> {
 		}
 		
 	}
-	
-	
+		
 	public static class sortMovieByYear implements Comparator<Movie>{
 			
 		@Override
@@ -91,4 +88,5 @@ public class Sort <T> {
 	
 	}
 
+	
 }
