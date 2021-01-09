@@ -37,6 +37,8 @@ public class test {
 		
 		Sort.mergeSort(frasi, new Sort.sortByAlphabet());
 		System.out.println(Arrays.toString(frasi));
+		System.out.println(Arrays.toString(frasi));
+		System.out.println(Arrays.toString(frasi));
 		
 
 	}
