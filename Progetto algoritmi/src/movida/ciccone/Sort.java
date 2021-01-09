@@ -1,11 +1,13 @@
 package movida.ciccone;
 
 import java.util.Arrays;
+import movida.commons.*;
 import java.util.Comparator;
 
 
 
 public class Sort <T> {
+	
 	
 	
 	public static <T> void selectionSort(T V[], Comparator<T> comparator) {
@@ -52,17 +54,41 @@ public class Sort <T> {
 	}
 	
 	
-	public static class sortByAlphabet implements Comparator<String>{
+	public static class sortMovieByTitle implements Comparator<Movie>{
 		
 		@Override
-		public int compare(String x1, String x2)
-		{
-
-			return x1.compareTo(x2);
-		
+		public int compare(Movie o1, Movie o2) {
+			String a, b;
+			a = o1.getTitle();
+			b = o2.getTitle();
+			return(a.compareToIgnoreCase(b));
 		}
 		
 	}
 	
+	
+	public static class sortMovieByYear implements Comparator<Movie>{
+			
+		@Override
+		public int compare(Movie o1, Movie o2) {
+			Integer a, b;
+			a = o1.getYear();
+			b = o2.getYear();
+			return(a.compareTo(b));
+		}
+		
+	}
+	
+	public static class sortMovieByVotes implements Comparator<Movie>{
+		
+		@Override
+		public int compare(Movie o1, Movie o2) {
+			Integer a, b;
+			a = o1.getVotes();
+			b = o2.getVotes();
+			return(a.compareTo(b));
+		}
+	
+	}
 
 }
