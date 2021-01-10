@@ -9,7 +9,10 @@ import java.util.Comparator;
 
 public class Sort <T> {
 	
-	
+	public <T> void selectedSort(T V[], SortingAlgorithm algo, Comparator<T> comparator) {
+		if(algo.equals(SortingAlgorithm.SelectionSort)) selectionSort(V, comparator);
+		else mergeSort(V, comparator);
+	}
 	public static <T> void selectionSort(T V[], Comparator<T> comparator) {
 		for (int i = 0; i < V.length - 1; i++) {
 			int m = i;

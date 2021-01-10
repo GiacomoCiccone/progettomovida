@@ -61,6 +61,9 @@ public class Movie {
 	        String tostring= "Titolo: " + this.getTitle();
 	        tostring += " Anno: " + this.getYear();
 	        tostring += " Voto: " + this.getVotes();
+	        tostring += " Cast: [ ";
+	        for(int i = 0; i < this.cast.length; i++) tostring+= this.cast[i] + " ";
+	        tostring += "] Director: " + this.director.toString();
 	        return tostring;
 	    } 
 	

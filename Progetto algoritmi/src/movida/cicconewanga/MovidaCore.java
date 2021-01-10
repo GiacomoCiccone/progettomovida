@@ -1,6 +1,8 @@
 package movida.cicconewanga;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import movida.cicconewanga.*;
 import movida.commons.Collaboration;
@@ -17,28 +19,26 @@ import movida.eccezioni.*;
 public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMovidaCollaborations {
 	
 	Dictionary<String, Movie> film;
-	Dictionary<String, Person> persone;
-	Sort<Entry> sort;
+	Dictionary<String, Person> person;
+	Sort<Entry[]> sort;
 	
 	MapImplementation tipoDizionario;
 	SortingAlgorithm tipoOrdinamento;
 	
 	public MovidaCore(MapImplementation Dizionario, SortingAlgorithm Ordinamento)
-			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{
-		
-		sort = new Sort<Entry>();	
-		
+			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{	
+		Sort<Entry[]> sort = new Sort<Entry[]>();
 		setMap(Dizionario);
 		setSort(Ordinamento);
 		
 		switch (Dizionario) {
 			case ListaNonOrdinata:
 				film = new ListaNonOrdinata<String, Movie>();
-				persone = new ListaNonOrdinata<String, Person>();
+				person = new ListaNonOrdinata<String, Person>();
 				break;
 			case ABR:
 				//film = new ABR<String, Movie>();
-				//persone = new ABR<String, Person>();
+				//person = new ABR<String, Person>();
 				break;
 	
 			default:
@@ -77,44 +77,93 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Movie> movieMatch = new LinkedList<Movie>();
+		Entry[] movieArray = (Entry[]) this.film.toArray();
+		for(int i = 0; i<movieArray.length; i++) {
+			Movie m = (Movie) movieArray[i].getElem();
+			if(m.getTitle().contains(title)) movieMatch.add(m);
+		}
+		Movie[] arr = new Movie[movieMatch.size()];
+		for(int i = 0; i<arr.length; i++) {
+			arr[i] = movieMatch.get(i);
+		}
+		return arr;
 	}
 
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Movie> movieMatch = new LinkedList<Movie>();
+		Entry[] movieArray = (Entry[]) this.film.toArray();
+		for(int i = 0; i<movieArray.length; i++) {
+			Movie m = (Movie) movieArray[i].getElem();
+			if(m.getYear().equals(year)) movieMatch.add(m);
+		}
+		Movie[] arr = new Movie[movieMatch.size()];
+		for(int i = 0; i<arr.length; i++) {
+			arr[i] = movieMatch.get(i);
+		}
+		return arr;
 	}
 
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Movie> movieMatch = new LinkedList<Movie>();
+		Entry[] movieArray = (Entry[]) this.film.toArray();
+		for(int i = 0; i<movieArray.length; i++) {
+			Movie m = (Movie) movieArray[i].getElem();
+			if(m.getDirector().equals(name)) movieMatch.add(m);
+		}
+		Movie[] arr = new Movie[movieMatch.size()];
+		for(int i = 0; i<arr.length; i++) {
+			arr[i] = movieMatch.get(i);
+		}
+		return arr;
 	}
 
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Movie> movieMatch = new LinkedList<Movie>();
+		Entry[] movieArray = (Entry[]) this.film.toArray();
+		for(int i = 0; i<movieArray.length; i++) {
+			Movie m = (Movie) movieArray[i].getElem();
+			Person[] cast = m.getCast();
+			for(Person actor : cast) {
+				if (actor.getName().equals(name)) movieMatch.add(m);
+			}
+		}
+		Movie[] arr = new Movie[movieMatch.size()];
+		for(int i = 0; i<arr.length; i++) {
+			arr[i] = movieMatch.get(i);
+		}
+		return arr;
 	}
 
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		Entry[] allMovies = (Entry[]) film.toArray();
+		Movie[] BestMovies = new Movie[N];
+		sort.selectedSort(allMovies, tipoOrdinamento, new Sort.sortMovieByVotes().reversed());
+		for(int i = 0; i<N && i<allMovies.length && i<allMovies.length; i++) {
+			BestMovies[i] = (Movie) allMovies[i].getElem();
+		}
+		return BestMovies;
 	}
 
 	@Override
 	public Movie[] searchMostRecentMovies(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		Entry[] allMovies = (Entry[]) film.toArray();
+		Movie[] mostRecentMovies = new Movie[N];
+		sort.selectedSort(allMovies, tipoOrdinamento, new Sort.sortMovieByYear());
+		for(int i = 0; i<N && i<allMovies.length && i<allMovies.length; i++) {
+			mostRecentMovies[i] = (Movie) allMovies[i].getElem();
+		}
+		return mostRecentMovies;
 	}
 
 	@Override
 	public Person[] searchMostActiveActors(Integer N) {
-		// TODO Auto-generated method stub
 		return null;
+		
 	}
 
 	@Override
@@ -131,50 +180,62 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		this.film.clear();
+		this.person.clear();
 		
 	}
 
 	@Override
 	public int countMovies() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.film.getSize();
 	}
 
 	@Override
 	public int countPeople() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.person.getSize();
 	}
 
 	@Override
 	public boolean deleteMovieByTitle(String title) {
-		// TODO Auto-generated method stub
-		return false;
+		try { this.film.delete(title); }
+		catch (ChiaveNonValidaEccezione e) {
+			return false;
+		}
+		catch (DizionarioVuotoEccezione e2) {
+			return false;
+		}
+		return true;
+		
 	}
 
 	@Override
 	public Movie getMovieByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
+		return (Movie) this.film.search(title);
 	}
 
 	@Override
 	public Person getPersonByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return (Person) this.person.search(name);
 	}
 
 	@Override
 	public Movie[] getAllMovies() {
-		// TODO Auto-generated method stub
-		return null;
+		Entry[] all = (Entry[]) film.toArray();
+		Movie[] movies = new Movie[film.getSize()];
+		for(int i = 0; i<film.getSize(); i++) {
+			movies[i] = (Movie) all[i].getElem();
+		}
+		return movies;
 	}
 
 	@Override
 	public Person[] getAllPeople() {
-		// TODO Auto-generated method stub
-		return null;
+		Entry[] all = (Entry[]) person.toArray();
+		Person[] persone = new Person[film.getSize()];
+		for(int i = 0; i<film.getSize(); i++) {
+			persone[i] = (Person) all[i].getElem();
+		}
+		return persone;
 	}
 
 	@Override

@@ -15,6 +15,8 @@ public interface Dictionary< K extends Comparable<K>,V extends Object> {
 	 public void delete(K key);
 
 	 public Entry[] toArray();
+	 
+	 public Object[] valuesToArray();
 
 	 
 	}

@@ -2,8 +2,7 @@ package movida.cicconewanga;
 
 import java.lang.reflect.Array;
 
-import movida.eccezioni.ChiaveNonValidaEccezione;
-import movida.eccezioni.ListaVuotaEccezione;
+import movida.eccezioni.*;
 
 public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implements Dictionary<K, V> {
 	
@@ -44,7 +43,7 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 
 	@Override
 	public Object search(K key) {
-		if(this.getSize() == 0) throw new ListaVuotaEccezione();
+		if(this.getSize() == 0) throw new DizionarioVuotoEccezione();
 		else {
 			Record tmp = this.list;
 			while(true) {
@@ -86,7 +85,7 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 
 	@Override
 	public void delete(K key) {
-		if(this.getSize() == 0) throw new ListaVuotaEccezione();
+		if(this.getSize() == 0) throw new DizionarioVuotoEccezione();
 		else if(this.list.getKey().equals(key)) {
 			if(this.list == this.list.next && this.list == this.list.prev)
 				this.list = this.list.prev = this.list.next = null;
@@ -136,7 +135,7 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 
 	@Override
 	public Entry[] toArray() {
-		if(this.getSize() == 0) throw new ListaVuotaEccezione();
+		if(this.getSize() == 0) throw new DizionarioVuotoEccezione();
 		Entry[] arr = new Entry[this.getSize()];
 		Record tmp = this.list; 		
 		int i = 0;
@@ -149,6 +148,21 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 
 		return arr;
 	}
-
+	
+	@Override
+	public Object[] valuesToArray() {
+		if(this.getSize() == 0) throw new DizionarioVuotoEccezione();
+		Object[] arr = new Object[this.getSize()];
+		Record tmp = this.list;
+		int i = 0;
+		while(true) {
+			arr[i] = tmp.getElem();
+			i++;
+			tmp = tmp.next;
+			if(tmp == this.list) break;
+		}
+		
+		return arr;
+	}
 
 }
