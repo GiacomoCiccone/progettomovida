@@ -1,9 +1,13 @@
 package movida.cicconewanga;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import movida.cicconewanga.Sort.sortMovieByTitle;
 import movida.commons.*;
@@ -59,7 +63,7 @@ public class test {
 		}
 		lista1.search(3515);*/
 		
-		Dictionary<String, Movie> film = new ListaNonOrdinata<String, Movie>();
+		/*Dictionary<String, Movie> film = new ListaNonOrdinata<String, Movie>();
 		Dictionary<String, Person> persone = new ListaNonOrdinata<String, Person>();
 		
 		
@@ -86,7 +90,7 @@ public class test {
 		
 		for(Integer i = 0; i<5; i++) {
 			film.insert(i.toString(), movie[i]);
-		}
+		}*/
 		
 		/*List<Movie> movieMatch = new LinkedList<Movie>();
 		Entry[] movieArray = (Entry[]) film.toArray();
@@ -129,8 +133,83 @@ public class test {
 			for(int i = 0; i<arr.length; i++) {
 				System.out.println(arr[i].toString());
 			}*/
+		/*Scanner x = null;
+		try {
+			x = new Scanner(new File("Esempio-Formato-Dati.txt"));
+			while(x.hasNext()) {
+				x.next();
+				String title = x.nextLine().trim();
+				x.next();
+				Integer year = Integer.parseInt(x.nextLine().trim());
+				x.next();
+				String directorName = x.nextLine().trim();
+				Person nuovoDirector = new Person(directorName);
+				x.next();
+				String castString = x.nextLine().trim();
+				LinkedList<Person> cast = new LinkedList<Person>();
+				int i = 0;
+				while(true) {
+					String name = castString.substring(i, castString.indexOf(','));
+					Person attore = new Person(name);	
+					cast.add(attore);
+					castString = castString.substring(castString.indexOf(',')+2);
+					if(castString.indexOf(',') == -1) {
+						Person attoreFinale = new Person(castString);
+						cast.add(attoreFinale);
+						break;}
+				}
+				Person[] castArray = new Person[cast.size()];
+				for(int j = 0; j<castArray.length; j++) {
+					castArray[j] = cast.get(j);
+				}
+				//fare ricerca in dizionario attori, se gia presente aumentare solo di 1 il numero di film.
+				x.next();
+				Integer vote = Integer.parseInt(x.nextLine().trim());
+				Movie nuovoFilm = new Movie(title, year, vote, castArray, nuovoDirector);
+				System.out.println(nuovoFilm.toString());
+				
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		MovidaCore test = new MovidaCore(MapImplementation.ListaNonOrdinata, SortingAlgorithm.SelectionSort);
+		File f = new File("Esempio-Formato-Dati.txt");
+		test.loadFromFile(f);
+		System.out.println(test.countMovies());
+		System.out.println(test.countPeople());
+		/*Movie[] allMovies = test.getAllMovies();
+		for(int i = 0; i<allMovies.length; i++) {
+			System.out.println(allMovies[i].toString());
+		}*/
+		/*Person[] allPerson = test.getAllPeople();
+		for(int i = 0; i<allPerson.length; i++) {
+			System.out.println(allPerson[i].toString());
+		}*/
+		
+		Integer n = 500;
+		/*Movie[] mostRecent = test.searchMostRecentMovies(n);
+		
+		for(int i = 0; i<mostRecent.length; i++) {
+			System.out.println(mostRecent[i].toString());
+		}*/
+		
+		/*Movie[] mostVoted = test.searchMostVotedMovies(n);
+		
+		for(int i = 0; i<mostVoted.length; i++) {
+			System.out.println(mostVoted[i].toString());
+		}*/
+		
+		//test.clear();
+		Person[] mostActive = test.searchMostActiveActors(n);
+		for(int i = 0; i<mostActive.length; i++) {
+			System.out.println(mostActive[i].toString() + " Comparse: " + mostActive[i].getComparse());
+		}
+		
+		
+
+
 	}
-
-
 
 }

@@ -23,9 +23,22 @@ package movida.commons;
 public class Person {
 
 	private String name;
+	private Integer numeroComparse = 0;
 	
 	public Person(String name) {
 		this.name = name;
+	}
+	
+	public void increaseComparse() {
+		this.numeroComparse+=1;
+	}
+	
+	public Integer getComparse() {
+		return this.numeroComparse;
+	}
+	
+	public void dcreaseComparse() {
+		if(this.numeroComparse>0) this.numeroComparse-=1;
 	}
 	
 	public String getName(){

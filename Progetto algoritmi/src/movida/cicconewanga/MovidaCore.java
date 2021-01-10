@@ -1,8 +1,10 @@
 package movida.cicconewanga;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import movida.cicconewanga.*;
 import movida.commons.Collaboration;
@@ -20,20 +22,19 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 	
 	Dictionary<String, Movie> film;
 	Dictionary<String, Person> person;
-	Sort<Entry[]> sort;
+	Sort<Entry[]> sort = new Sort<Entry[]>();
 	
 	MapImplementation tipoDizionario;
 	SortingAlgorithm tipoOrdinamento;
 	
 	public MovidaCore(MapImplementation Dizionario, SortingAlgorithm Ordinamento)
-			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{	
-		Sort<Entry[]> sort = new Sort<Entry[]>();
+			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{
 		setMap(Dizionario);
 		setSort(Ordinamento);
-		
+
 		switch (Dizionario) {
 			case ListaNonOrdinata:
-				film = new ListaNonOrdinata<String, Movie>();
+				film = new ListaNonOrdinata<String, Movie>(true);
 				person = new ListaNonOrdinata<String, Person>();
 				break;
 			case ABR:
@@ -56,7 +57,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
-		if(this.tipoOrdinamento == a || a != SortingAlgorithm.SelectionSort || a != SortingAlgorithm.MergeSort)
+		if(this.tipoOrdinamento == a || a != SortingAlgorithm.SelectionSort && a != SortingAlgorithm.MergeSort)
 		return false;
 		else {
 			this.tipoOrdinamento = a;
@@ -67,12 +68,13 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 	@Override
 	public boolean setMap(MapImplementation m) {
 		if(this.tipoDizionario == m || m != MapImplementation.ListaNonOrdinata
-				|| m != MapImplementation.ABR)
+				&& m != MapImplementation.ABR) {
 			return false;
-			else {
-				this.tipoDizionario = m;
-				return true;
-			}
+		}
+		else {
+			this.tipoDizionario = m;
+			return true;
+		}
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 		Entry[] movieArray = (Entry[]) this.film.toArray();
 		for(int i = 0; i<movieArray.length; i++) {
 			Movie m = (Movie) movieArray[i].getElem();
-			if(m.getDirector().equals(name)) movieMatch.add(m);
+			if(m.getDirector().getName().equalsIgnoreCase(name)) movieMatch.add(m);
 		}
 		Movie[] arr = new Movie[movieMatch.size()];
 		for(int i = 0; i<arr.length; i++) {
@@ -128,7 +130,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 			Movie m = (Movie) movieArray[i].getElem();
 			Person[] cast = m.getCast();
 			for(Person actor : cast) {
-				if (actor.getName().equals(name)) movieMatch.add(m);
+				if (actor.getName().equalsIgnoreCase(name)) movieMatch.add(m);
 			}
 		}
 		Movie[] arr = new Movie[movieMatch.size()];
@@ -141,7 +143,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
 		Entry[] allMovies = (Entry[]) film.toArray();
-		Movie[] BestMovies = new Movie[N];
+		Movie[] BestMovies = new Movie[min(N, allMovies.length)];
 		sort.selectedSort(allMovies, tipoOrdinamento, new Sort.sortMovieByVotes().reversed());
 		for(int i = 0; i<N && i<allMovies.length && i<allMovies.length; i++) {
 			BestMovies[i] = (Movie) allMovies[i].getElem();
@@ -152,23 +154,82 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 	@Override
 	public Movie[] searchMostRecentMovies(Integer N) {
 		Entry[] allMovies = (Entry[]) film.toArray();
-		Movie[] mostRecentMovies = new Movie[N];
-		sort.selectedSort(allMovies, tipoOrdinamento, new Sort.sortMovieByYear());
-		for(int i = 0; i<N && i<allMovies.length && i<allMovies.length; i++) {
+		Movie[] mostRecentMovies = new Movie[min(N, allMovies.length)];
+		sort.selectedSort(allMovies, tipoOrdinamento, new Sort.sortMovieByYear().reversed());
+		for(int i = 0; i<N && i<allMovies.length; i++) {
 			mostRecentMovies[i] = (Movie) allMovies[i].getElem();
 		}
 		return mostRecentMovies;
 	}
 
+	private int min(int n, int m) {
+		if(n<m) return n;
+		else return m;
+	}
+
+	
 	@Override
 	public Person[] searchMostActiveActors(Integer N) {
-		return null;
+		Entry[] allPerson = (Entry[]) person.toArray();
+		this.sort.selectedSort(allPerson, tipoOrdinamento, new Sort.sortPersonByActivities().reversed());
+		Person[] popularPerson = new Person[min(N, allPerson.length)];
+		for(int i = 0; i<N && i<allPerson.length; i++) {
+			popularPerson[i] = (Person) allPerson[i].getElem();
+		}
+		return popularPerson;
 		
 	}
 
 	@Override
 	public void loadFromFile(File f) {
-		// TODO Auto-generated method stub
+		Scanner x = null;
+		try {
+			x = new Scanner(f);
+			while(x.hasNext()) {
+				x.next();
+				String title = x.nextLine().trim();
+				x.next();
+				Integer year = Integer.parseInt(x.nextLine().trim());
+				x.next();
+				String directorName = x.nextLine().trim();
+				Person nuovoDirector = new Person(directorName);
+				x.next();
+				String castString = x.nextLine().trim();
+				LinkedList<Person> cast = new LinkedList<Person>();
+				int i = 0;
+				while(true) {
+					String name = castString.substring(i, castString.indexOf(','));
+					Person attore = new Person(name);	
+					cast.add(attore);
+					castString = castString.substring(castString.indexOf(',')+2);
+					if(castString.indexOf(',') == -1) {
+						Person attoreFinale = new Person(castString);
+						cast.add(attoreFinale);
+						break;}
+				}
+				Person[] castArray = new Person[cast.size()];
+				for(int j = 0; j<castArray.length; j++) {
+					castArray[j] = cast.get(j);
+				}
+				x.next();
+				Integer vote = Integer.parseInt(x.nextLine().trim());
+				Movie nuovoFilm = new Movie(title, year, vote, castArray, nuovoDirector);
+				if(!film.Exist(nuovoFilm.getTitle().toLowerCase())) {
+					film.insert(nuovoFilm.getTitle().toLowerCase(), nuovoFilm);
+					for(int i2 = 0; i2<castArray.length; i2++) {
+						if(!person.Exist(castArray[i2].getName().toLowerCase())) {person.insert(castArray[i2].getName().toLowerCase(), castArray[i2]); castArray[i2].increaseComparse();}
+						else {
+							Person alreadyExist = (Person) person.search(castArray[i2].getName().toLowerCase());
+							alreadyExist.increaseComparse();
+						}
+					}
+					if(!person.Exist(nuovoDirector.getName().toLowerCase())) person.insert(nuovoDirector.getName().toLowerCase(), nuovoDirector);
+				}
+				
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -197,7 +258,15 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public boolean deleteMovieByTitle(String title) {
-		try { this.film.delete(title); }
+		try {
+			Movie toDelete = (Movie)this.film.search(title.toLowerCase());
+			Person[] cast = toDelete.getCast();
+			for(int i = 0; i<cast.length; i++) {
+				Person p = (Person) this.person.search(cast[i].getName().toLowerCase());
+				p.dcreaseComparse();
+				if(p.getComparse().equals(0)) this.person.delete(p.getName().toLowerCase());
+			}
+		}
 		catch (ChiaveNonValidaEccezione e) {
 			return false;
 		}
@@ -205,17 +274,16 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 			return false;
 		}
 		return true;
-		
 	}
 
 	@Override
 	public Movie getMovieByTitle(String title) {
-		return (Movie) this.film.search(title);
+		return (Movie) this.film.search(title.toLowerCase());
 	}
 
 	@Override
 	public Person getPersonByName(String name) {
-		return (Person) this.person.search(name);
+		return (Person) this.person.search(name.toLowerCase());
 	}
 
 	@Override
@@ -231,8 +299,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 	@Override
 	public Person[] getAllPeople() {
 		Entry[] all = (Entry[]) person.toArray();
-		Person[] persone = new Person[film.getSize()];
-		for(int i = 0; i<film.getSize(); i++) {
+		Person[] persone = new Person[person.getSize()];
+		for(int i = 0; i<person.getSize(); i++) {
 			persone[i] = (Person) all[i].getElem();
 		}
 		return persone;

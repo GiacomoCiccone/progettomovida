@@ -17,6 +17,8 @@ public interface Dictionary< K extends Comparable<K>,V extends Object> {
 	 public Entry[] toArray();
 	 
 	 public Object[] valuesToArray();
+	 
+	 public Boolean Exist(K key);
 
 	 
 	}

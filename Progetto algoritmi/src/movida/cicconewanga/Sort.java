@@ -13,7 +13,7 @@ public class Sort <T> {
 		if(algo.equals(SortingAlgorithm.SelectionSort)) selectionSort(V, comparator);
 		else mergeSort(V, comparator);
 	}
-	public static <T> void selectionSort(T V[], Comparator<T> comparator) {
+	private static <T> void selectionSort(T V[], Comparator<T> comparator) {
 		for (int i = 0; i < V.length - 1; i++) {
 			int m = i;
 			for (int j = i + 1; j < V.length; j++) {
@@ -27,7 +27,7 @@ public class Sort <T> {
 		}
 	}
 		
-	public static <T> void mergeSort(T V[], Comparator<T> comparator) {
+	private static <T> void mergeSort(T V[], Comparator<T> comparator) {
 		mergeRec(V, comparator, 0, V.length -1);
 		
 	}
@@ -99,6 +99,18 @@ public class Sort <T> {
 				return ( x1.getKey()).compareTo(x2.getKey() );
 		}
 		
+	}
+	
+	public static class sortPersonByActivities implements Comparator<Entry>{
+		
+		@Override
+		public int compare(Entry o1, Entry o2) {
+			Person a, b;
+			a = (Person) o1.getElem();
+			b = (Person) o2.getElem();
+			return(a.getComparse().compareTo(b.getComparse()));
+		}
+	
 	}
 
 	

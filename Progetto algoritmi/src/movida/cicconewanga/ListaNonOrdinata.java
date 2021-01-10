@@ -164,5 +164,20 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 		
 		return arr;
 	}
+	
+	@Override
+	public Boolean Exist(K key)  {
+		if(this.getSize() == 0) return false;
+		else {
+			Record tmp = this.list;
+			while(true) {
+				if(tmp.getKey().equals(key)) return true;
+				else {
+					tmp = tmp.next;
+					if(tmp == this.list) return false;
+				}
+			}
+		}
+	}
 
 }
