@@ -1,7 +1,8 @@
-package movida.ciccone;
+package movida.cicconewanga;
 
 import java.util.Arrays;
 import movida.commons.*;
+
 import java.util.Comparator;
 
 
@@ -52,40 +53,49 @@ public class Sort <T> {
 		for (int t = 0; k <= f2; k++, t++) V[k] = X[t];
 	}
 		
-	public static class sortMovieByTitle implements Comparator<Movie>{
+	public static class sortMovieByTitle implements Comparator<Entry>{
 		
 		@Override
-		public int compare(Movie o1, Movie o2) {
-			String a, b;
-			a = o1.getTitle();
-			b = o2.getTitle();
-			return(a.compareToIgnoreCase(b));
+		public int compare(Entry o1, Entry o2) {
+			Movie a, b;
+			a = (Movie) o1.getElem();
+			b = (Movie) o2.getElem();
+			return(a.getTitle().compareToIgnoreCase(b.getTitle()));
 		}
 		
 	}
 		
-	public static class sortMovieByYear implements Comparator<Movie>{
+	public static class sortMovieByYear implements Comparator<Entry>{
 			
 		@Override
-		public int compare(Movie o1, Movie o2) {
-			Integer a, b;
-			a = o1.getYear();
-			b = o2.getYear();
-			return(a.compareTo(b));
+		public int compare(Entry o1, Entry o2) {
+			Movie a, b;
+			a = (Movie) o1.getElem();
+			b = (Movie) o2.getElem();
+			return(a.getYear().compareTo(b.getYear()));
 		}
 		
 	}
 	
-	public static class sortMovieByVotes implements Comparator<Movie>{
+	public static class sortMovieByVotes implements Comparator<Entry>{
 		
 		@Override
-		public int compare(Movie o1, Movie o2) {
-			Integer a, b;
-			a = o1.getVotes();
-			b = o2.getVotes();
-			return(a.compareTo(b));
+		public int compare(Entry o1, Entry o2) {
+			Movie a, b;
+			a = (Movie) o1.getElem();
+			b = (Movie) o2.getElem();
+			return(a.getVotes().compareTo(b.getVotes()));
 		}
 	
+	}
+	
+	public static class sortByKey implements Comparator<Entry>{
+		
+		@Override
+		public int compare(Entry x1, Entry x2) {
+				return ( x1.getKey()).compareTo(x2.getKey() );
+		}
+		
 	}
 
 	

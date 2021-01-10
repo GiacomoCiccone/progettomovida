@@ -1,17 +1,21 @@
-package movida.ciccone;
-
+package movida.cicconewanga;
 
 public interface Dictionary< K extends Comparable<K>,V extends Object> {
 	
-	 public int size();
+	 public int getSize();
 	 
 	 public boolean isEmpty();
 	 
-	 public Entry<K,V> search(K key);
+	 public void clear();
+	 
+	 public Object search(K key);
 	 
 	 public void insert(K key, V value);
 	 
 	 public void delete(K key);
 
+	 public Entry[] toArray();
+
 	 
 	}
+

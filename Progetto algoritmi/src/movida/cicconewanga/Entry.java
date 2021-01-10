@@ -1,4 +1,4 @@
-package movida.ciccone;
+package movida.cicconewanga;
 
 public class Entry <K extends Comparable<K>, V extends Object> {
 	
@@ -24,7 +24,7 @@ public class Entry <K extends Comparable<K>, V extends Object> {
 	@Override
 	public String toString() 
 	{
-		return getKey() + " : " + getElem();
+		return "Key: " + getKey() + " Value: " + getElem();
 	}
 
 }
