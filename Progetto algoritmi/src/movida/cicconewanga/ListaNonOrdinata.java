@@ -24,7 +24,7 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 
 	
 	public ListaNonOrdinata() {
-		this.insertTail = insertTail;
+		//this.insertTail = insertTail;
 	}
 	
 	public ListaNonOrdinata(Boolean insertTail) {
@@ -149,21 +149,6 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 		return arr;
 	}
 	
-	@Override
-	public Object[] valuesToArray() {
-		if(this.getSize() == 0) throw new DizionarioVuotoEccezione();
-		Object[] arr = new Object[this.getSize()];
-		Record tmp = this.list;
-		int i = 0;
-		while(true) {
-			arr[i] = tmp.getElem();
-			i++;
-			tmp = tmp.next;
-			if(tmp == this.list) break;
-		}
-		
-		return arr;
-	}
 	
 	@Override
 	public Boolean Exist(K key)  {

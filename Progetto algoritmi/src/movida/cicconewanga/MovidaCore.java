@@ -2,6 +2,9 @@ package movida.cicconewanga;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -38,8 +41,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 				person = new ListaNonOrdinata<String, Person>();
 				break;
 			case ABR:
-				//film = new ABR<String, Movie>();
-				//person = new ABR<String, Person>();
+				film = new ABR<String, Movie>();
+				person = new ABR<String, Person>();
 				break;
 	
 			default:
@@ -214,27 +217,27 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 				x.next();
 				Integer vote = Integer.parseInt(x.nextLine().trim());
 				Movie nuovoFilm = new Movie(title, year, vote, castArray, nuovoDirector);
-				if(!film.Exist(nuovoFilm.getTitle().toLowerCase())) {
-					film.insert(nuovoFilm.getTitle().toLowerCase(), nuovoFilm);
-					for(int i2 = 0; i2<castArray.length; i2++) {
-						if(!person.Exist(castArray[i2].getName().toLowerCase())) {
-							person.insert(castArray[i2].getName().toLowerCase(), castArray[i2]);
-							castArray[i2].increaseComparse();}
-						else {
-							Person alreadyExist = (Person) person.search(castArray[i2].getName().toLowerCase());
-							alreadyExist.increaseComparse();
-						}
-					}
-					if(!person.Exist(nuovoDirector.getName().toLowerCase())) {
-						person.insert(nuovoDirector.getName().toLowerCase(), nuovoDirector);
-						nuovoDirector.dcreaseComparse();
+				if(film.Exist(nuovoFilm.getTitle().toLowerCase())) this.deleteMovieByTitle(nuovoFilm.getTitle().toLowerCase());
+				film.insert(nuovoFilm.getTitle().toLowerCase(), nuovoFilm);
+				for(int i2 = 0; i2<castArray.length; i2++) {
+					if(!person.Exist(castArray[i2].getName().toLowerCase())) {
+						person.insert(castArray[i2].getName().toLowerCase(), castArray[i2]);
+						castArray[i2].increaseComparse();
 						}
 					else {
-						Person alreadyExist = (Person) person.search(nuovoDirector.getName().toLowerCase());
-						alreadyExist.dcreaseComparse();
+						Person alreadyExist = (Person) person.search(castArray[i2].getName().toLowerCase());
+						alreadyExist.increaseComparse();
 					}
 				}
-			}
+				if(!person.Exist(nuovoDirector.getName().toLowerCase())) {
+					person.insert(nuovoDirector.getName().toLowerCase(), nuovoDirector);
+					nuovoDirector.dcreaseComparse();
+					}
+				else {
+					Person alreadyExist = (Person) person.search(nuovoDirector.getName().toLowerCase());
+					alreadyExist.dcreaseComparse();
+				}
+			}		
 				
 		}
 		 catch (FileNotFoundException e) {
@@ -245,7 +248,23 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public void saveToFile(File f) {
-		// TODO Auto-generated method stub
+		try {
+			FileWriter fw = new FileWriter(f);
+			PrintWriter pw = new PrintWriter(fw);
+			Movie[] allMovies = this.getAllMovies();
+			String text = "";
+			
+			for(int i = 0; i<allMovies.length; i++) {
+				if(i == allMovies.length-1) text += allMovies[i].toString();
+				else text += allMovies[i].toString() + "\n" + "\n";
+			}
+			
+			pw.print(text);
+			pw.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 

@@ -174,22 +174,22 @@ public class test {
 			e.printStackTrace();
 		}*/
 		
-		MovidaCore test = new MovidaCore(MapImplementation.ListaNonOrdinata, SortingAlgorithm.SelectionSort);
+		MovidaCore test = new MovidaCore(MapImplementation.ABR, SortingAlgorithm.SelectionSort);
 		//System.out.print(System.getProperty("user.dir"));
 		File f = new File("esempio-formato-dati.txt");
 		test.loadFromFile(f);
-		//System.out.println(test.countMovies());
-		//System.out.println(test.countPeople());
-		/*Movie[] allMovies = test.getAllMovies();
+		/*System.out.println(test.countMovies());
+		System.out.println(test.countPeople());
+		Movie[] allMovies = test.getAllMovies();
 		for(int i = 0; i<allMovies.length; i++) {
 			System.out.println(allMovies[i].toString());
-		}*/
-		/*Person[] allPerson = test.getAllPeople();
+		}
+		Person[] allPerson = test.getAllPeople();
 		for(int i = 0; i<allPerson.length; i++) {
 			System.out.println(allPerson[i].toString());
 		}*/
 		
-		//Integer n = 500;
+		Integer n = 100;
 		/*Movie[] mostRecent = test.searchMostRecentMovies(n);
 		
 		for(int i = 0; i<mostRecent.length; i++) {
@@ -203,9 +203,10 @@ public class test {
 		}*/
 		
 		//test.clear();
+		//System.out.println(test.countMovies() + " " + test.countPeople());
 		/*Person[] mostActive = test.searchMostActiveActors(n);
 		for(int i = 0; i<mostActive.length; i++) {
-			System.out.println(mostActive[i].toString() + " Comparse: " + mostActive[i].getComparse());
+			System.out.println(mostActive[i].toString());
 		}*/
 		
 		/*Movie[] starredBy = test.searchMoviesStarredBy("Harrison Ford");
@@ -223,7 +224,7 @@ public class test {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
 		
-		/*Movie[] starredBy = test.searchMoviesByTitle("I");
+		/*Movie[] starredBy = test.searchMoviesByTitle("ve");
 		for(int i = 0; i<starredBy.length; i++) {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
@@ -246,7 +247,7 @@ public class test {
 		System.out.println(test.deleteMovieByTitle("Scarface"));
 		System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
 		System.out.println(test.deleteMovieByTitle("Air Force One"));
-		System.out.println(test.deleteMovieByTitle("The Fugitive"));
+		//System.out.println(test.deleteMovieByTitle("The Fugitive"));
 		allPerson = test.getAllPeople();
 		for(int i = 0; i<allPerson.length; i++) {
 			System.out.println(allPerson[i].toString());
@@ -255,6 +256,18 @@ public class test {
 		System.out.println(test.countPeople());*/
 		//test.setMap(MapImplementation.ABR);
 		//test.setSort(SortingAlgorithm.MergeSort);
+		
+		System.out.println(test.deleteMovieByTitle("Cape Fear"));
+		System.out.println(test.deleteMovieByTitle("Pulp Fiction"));
+		System.out.println(test.deleteMovieByTitle("Contact"));
+		System.out.println(test.deleteMovieByTitle("Die Hard"));
+		System.out.println(test.deleteMovieByTitle("The Sixth Sense"));
+		System.out.println(test.deleteMovieByTitle("Scarface"));
+		System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
+		System.out.println(test.deleteMovieByTitle("Air Force One"));
+		
+		File f2 = new File("FileSalvato.txt");
+		test.saveToFile(f2);
 
 	}
 

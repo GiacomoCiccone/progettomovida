@@ -58,12 +58,17 @@ public class Movie {
 	
 	 @Override
 	    public String toString() { 
-	        String tostring= "Titolo: " + this.getTitle();
-	        tostring += "\nAnno: " + this.getYear();
-	        tostring += "\nVoti: " + this.getVotes();
-	        tostring += "\nCast: [ ";
-	        for(int i = 0; i < this.cast.length; i++) tostring+= this.cast[i].getName() + ", ";
-	        tostring += "]\nDirector: " + this.director.getName();
+	        String tostring= "Title: " + this.getTitle();
+	        tostring += "\nYear: " + this.getYear();
+	        tostring += "\nDirector: " + this.director.getName();
+	        tostring += "\nCast: ";
+	        for(int i = 0; i < this.cast.length; i++) {
+	        	if(i == this.cast.length-1) tostring+= this.cast[i].getName();
+	        	else {
+	        	tostring+= this.cast[i].getName() + ", ";
+	        	}
+	        }
+	        tostring += "\nVotes: " + this.getVotes();
 	        return tostring;
 	    } 
 	
