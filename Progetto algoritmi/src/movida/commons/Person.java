@@ -38,7 +38,7 @@ public class Person {
 	}
 	
 	public void dcreaseComparse() {
-		if(this.numeroComparse>0) this.numeroComparse-=1;
+		this.numeroComparse-=1;
 	}
 	
 	public String getName(){
@@ -47,8 +47,8 @@ public class Person {
 	
 	@Override
 	public String toString() {
-		return name;
-		
+		if (this.numeroComparse > 0) return name + " ha partecipato a " + this.getComparse() + " film come attore";
+		else return name + " ha partecipato a " + (-this.getComparse()) + " film come regista";
 	}
 	
 }

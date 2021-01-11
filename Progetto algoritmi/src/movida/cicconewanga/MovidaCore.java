@@ -20,12 +20,12 @@ import movida.eccezioni.*;
 
 public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMovidaCollaborations {
 	
-	Dictionary<String, Movie> film;
-	Dictionary<String, Person> person;
-	Sort<Entry[]> sort = new Sort<Entry[]>();
+	private Dictionary<String, Movie> film;
+	private Dictionary<String, Person> person;
+	private Sort<Entry[]> sort = new Sort<Entry[]>();
 	
-	MapImplementation tipoDizionario;
-	SortingAlgorithm tipoOrdinamento;
+	private MapImplementation tipoDizionario;
+	private SortingAlgorithm tipoOrdinamento;
 	
 	public MovidaCore(MapImplementation Dizionario, SortingAlgorithm Ordinamento)
 			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{
@@ -83,7 +83,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 		Entry[] movieArray = (Entry[]) this.film.toArray();
 		for(int i = 0; i<movieArray.length; i++) {
 			Movie m = (Movie) movieArray[i].getElem();
-			if(m.getTitle().contains(title)) movieMatch.add(m);
+			if(m.getTitle().toLowerCase().contains(title.toLowerCase())) movieMatch.add(m);
 		}
 		Movie[] arr = new Movie[movieMatch.size()];
 		for(int i = 0; i<arr.length; i++) {
@@ -217,17 +217,27 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 				if(!film.Exist(nuovoFilm.getTitle().toLowerCase())) {
 					film.insert(nuovoFilm.getTitle().toLowerCase(), nuovoFilm);
 					for(int i2 = 0; i2<castArray.length; i2++) {
-						if(!person.Exist(castArray[i2].getName().toLowerCase())) {person.insert(castArray[i2].getName().toLowerCase(), castArray[i2]); castArray[i2].increaseComparse();}
+						if(!person.Exist(castArray[i2].getName().toLowerCase())) {
+							person.insert(castArray[i2].getName().toLowerCase(), castArray[i2]);
+							castArray[i2].increaseComparse();}
 						else {
 							Person alreadyExist = (Person) person.search(castArray[i2].getName().toLowerCase());
 							alreadyExist.increaseComparse();
 						}
 					}
-					if(!person.Exist(nuovoDirector.getName().toLowerCase())) person.insert(nuovoDirector.getName().toLowerCase(), nuovoDirector);
+					if(!person.Exist(nuovoDirector.getName().toLowerCase())) {
+						person.insert(nuovoDirector.getName().toLowerCase(), nuovoDirector);
+						nuovoDirector.dcreaseComparse();
+						}
+					else {
+						Person alreadyExist = (Person) person.search(nuovoDirector.getName().toLowerCase());
+						alreadyExist.dcreaseComparse();
+					}
 				}
-				
 			}
-		} catch (FileNotFoundException e) {
+				
+		}
+		 catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
@@ -266,6 +276,10 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 				p.dcreaseComparse();
 				if(p.getComparse().equals(0)) this.person.delete(p.getName().toLowerCase());
 			}
+			Person director = (Person) this.person.search(toDelete.getDirector().getName().toLowerCase());
+			director.increaseComparse();
+			if(director.getComparse().equals(0)) this.person.delete(director.getName().toLowerCase());
+			this.film.delete(title.toLowerCase());
 		}
 		catch (ChiaveNonValidaEccezione e) {
 			return false;
