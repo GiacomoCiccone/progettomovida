@@ -282,12 +282,17 @@ public class test {
 			System.out.println(c1.toString());
 		}*/
 		
-		Person[] team = test.getTeamOf(test.getPersonByName("toni collette"));
+		/*Person[] team = test.getTeamOf(test.getPersonByName("toni collette"));
 		
 		for(int i = 0; i < team.length; i++) {
 			System.out.println(team[i]);
-		}
+		}*/
 		
+		Collaboration[] collab = test.maximizeCollaborationsInTheTeamOf(test.getPersonByName("alan rickman"));
+		
+		for(int i = 0; i < collab.length; i++) {
+			System.out.println(collab[i].toString());
+		}
 
 
 	}

@@ -1,8 +1,11 @@
 package movida.cicconewanga;
 
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
+import movida.cicconewanga.Sort.sortPersonByActivities;
 import movida.commons.Collaboration;
 import movida.commons.Movie;
 import movida.commons.Person;
@@ -14,6 +17,9 @@ public class Grafo {
 		public Person vertice;
 		public LinkedList<Collaboration> adiacenze;
 		public boolean marked = false;
+		public Nodo parent = null;
+		public Double dist = 0.0;
+		public Collaboration ActiveCollab;
 		
 		public Nodo(Person p) {
 			this.vertice = p;
@@ -22,6 +28,26 @@ public class Grafo {
 		
 		public void setTrue() {
 			this.marked = true;
+		}
+		
+		public void setParent(Nodo parent) {
+			this.parent = parent;
+		}
+		
+		public void setDist(Double d) {
+			this.dist = d;
+		}
+		
+		public Double getDist() {
+			return this.dist;
+		}
+		
+		public void setActiveCollab(Collaboration c) {
+			this.ActiveCollab = c;
+		}
+		
+		public Collaboration getActiveCollab() {
+			return this.ActiveCollab;
 		}
 		
 	}
@@ -33,6 +59,10 @@ public class Grafo {
 	
 	private void setAllFalse() {
 		for(Nodo n : grafo) n.marked = false;
+	}
+	
+	private void setToInfinity() {
+		for(Nodo n : grafo) n.dist = Double.NEGATIVE_INFINITY;
 	}
 	
 	
@@ -238,9 +268,84 @@ public class Grafo {
 	}
 	
 	public Collaboration[] MST(Person p) {
-		
+		LinkedList<Collaboration> collab = new LinkedList<Collaboration>();
+		Nodo source = this.cercaNodo(p);
+		this.setAllFalse();
+		this.setToInfinity();
+		Queue<Nodo> maxQueue = new PriorityQueue<Nodo>(new Grafo.sortByVotes().reversed());
+		source.setDist(0.0);
+		maxQueue.add(source);
+		source.setTrue();
+		while(maxQueue.size() > 0) {
+			Nodo u = maxQueue.remove();
+			if(!collab.contains(u.getActiveCollab()) && u.ActiveCollab != null)
+				collab.add(u.getActiveCollab());
+			for(Collaboration c : u.adiacenze) {
+				Nodo toAdd;
+				if(c.getActorA().getName().equalsIgnoreCase(u.vertice.getName())) {
+					Person toAddP = c.getActorB();
+					toAdd = this.cercaNodo(toAddP);
+					if(!toAdd.marked) {
+						toAdd.setDist(c.getScore());
+						toAdd.setActiveCollab(c);
+						toAdd.parent = u;
+						maxQueue.add(toAdd);
+						toAdd.setTrue();
+					}
+					else if(toAdd.dist < c.getScore()) {
+						maxQueue.remove(toAdd);
+						toAdd.setDist(c.getScore());
+						toAdd.setActiveCollab(c);
+						toAdd.parent = u;
+						maxQueue.add(toAdd);
+					}
+				}
+				else {
+					Person toAddP = c.getActorA();
+					toAdd = this.cercaNodo(toAddP);
+					if(!toAdd.marked) {
+						toAdd.setDist(c.getScore());
+						toAdd.setActiveCollab(c);
+						toAdd.parent = u;
+						maxQueue.add(toAdd);
+						toAdd.setTrue();
+					}
+					else if(toAdd.dist < c.getScore()) {
+						maxQueue.remove(toAdd);
+						toAdd.setDist(c.getScore());
+						toAdd.setActiveCollab(c);
+						toAdd.parent = u;
+						maxQueue.add(toAdd);
+					}
+				}
+			}
+			
+		}
+		Collaboration[] collabArray = new Collaboration[collab.size()];
+		for(int i = 0; i < collabArray.length; i++) {
+			collabArray[i] = collab.get(i);
+		}
+		return collabArray;
 	}
 	
+	private Nodo cercaNodo(Person p) {
+		for(int i = 0; i < this.grafo.size(); i++) {
+			if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(p.getName()))
+				return this.grafo.get(i);
+		}
+		
+		return null;
+	}
+	
+	
+	public static class sortByVotes implements Comparator<Nodo>{
+		
+		@Override
+		public int compare(Nodo n1, Nodo n2) {
+				return (n1.getDist()).compareTo(n2.getDist());
+		}
+		
+	}
 	
 	
 }
