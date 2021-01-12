@@ -32,4 +32,12 @@ public class Collaboration {
 		return score / movies.size();
 	}
 	
+	public void addCollab(Movie m) {
+		this.movies.add(m);
+	}
+	
+	public void removeCollab(Movie m) {
+		this.movies.remove(m);
+	}
+	
 }

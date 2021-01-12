@@ -34,6 +34,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{
 		setMap(Dizionario);
 		setSort(Ordinamento);
+		
 
 		switch (Dizionario) {
 			case ListaNonOrdinata:
@@ -293,7 +294,6 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 			for(int i = 0; i<cast.length; i++) {
 				Person p = (Person) this.person.search(cast[i].getName().toLowerCase());
 				p.dcreaseComparse();
-				if(p.getComparse().equals(0)) this.person.delete(p.getName().toLowerCase());
 			}
 			Person director = (Person) this.person.search(toDelete.getDirector().getName().toLowerCase());
 			director.increaseComparse();
