@@ -1,44 +1,58 @@
 package movida.cicconewanga;
 
 import java.util.LinkedList;
+import java.util.Queue;
 
 import movida.commons.Collaboration;
+import movida.commons.Movie;
 import movida.commons.Person;
 
 public class Grafo {
 	
-	private class Nodo {
+	private class Nodo extends Object{
 		
-		public Person vertice = null;
-		public LinkedList<Collaboration> adiacenze = null;
-		boolean marked = false;
+		public Person vertice;
+		public LinkedList<Collaboration> adiacenze;
+		public boolean marked = false;
 		
 		public Nodo(Person p) {
 			this.vertice = p;
 			this.adiacenze = new LinkedList<Collaboration>();
 		}
 		
+		public void setTrue() {
+			this.marked = true;
+		}
+		
 	}
+	
 	
 	private LinkedList<Nodo> grafo = new LinkedList<Nodo>();
 	int nodi = 0;
 	int archi = 0;
+	
+	private void setAllFalse() {
+		for(Nodo n : grafo) n.marked = false;
+	}
+	
 	
 	public int getNodi() {
 		return this.nodi;
 	}
 	
 	public int getArchi() {
-		return this.archi;
+		return this.archi/2;
 	}
 	
-	public void insert(Collaboration c) {
+	public void insert(Collaboration c, Movie m) {
 		Person A = c.getActorA();
 		Person B = c.getActorB();
 		if(!this.exist(A)) {
 			Nodo A1 = new Nodo(A);
 			A1.vertice = A;
 			A1.adiacenze.add(c);
+			this.archi++;
+			c.addCollab(m);
 			this.grafo.add(A1);
 			this.nodi++;
 		}
@@ -48,18 +62,24 @@ public class Grafo {
 				if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(A.getName()))
 					A1 = this.grafo.get(i);
 			}
+			Boolean flag = false;
 			for(int i = 0; i < A1.adiacenze.size(); i++) {
 				if(A1.adiacenze.get(i).getActorB().getName().equalsIgnoreCase(B.getName())
 						|| A1.adiacenze.get(i).getActorA().getName().equalsIgnoreCase(B.getName()))
-				{A1.adiacenze.remove(i); this.archi--;}
+				{A1.adiacenze.get(i).addCollab(m); flag = true;}
 			}
-			A1.adiacenze.add(c);
-			this.archi++;
+			if(!flag) {
+				A1.adiacenze.add(c);
+				c.addCollab(m);
+				this.archi++;
+			}
 		}
 		if(!this.exist(B)) {
 			Nodo B1 = new Nodo(B);
 			B1.vertice = B;
 			B1.adiacenze.add(c);
+			c.addCollab(m);
+			this.archi++;
 			this.grafo.add(B1);
 			this.nodi++;
 		}
@@ -69,16 +89,20 @@ public class Grafo {
 				if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(B.getName()))
 					B1 = this.grafo.get(i);
 			}
+			Boolean flag2 = false;
 			for(int i = 0; i < B1.adiacenze.size(); i++) {
 				if(B1.adiacenze.get(i).getActorA().getName().equalsIgnoreCase(A.getName())
 						|| B1.adiacenze.get(i).getActorB().getName().equalsIgnoreCase(A.getName()))
-				{B1.adiacenze.remove(i); this.archi--;}
+				{B1.adiacenze.get(i).addCollab(m); flag2 = true;}
 			}
-			B1.adiacenze.add(c);
-			this.archi++;
+			if(!flag2) {
+				B1.adiacenze.add(c);
+				this.archi++;
+			}
 		}
 	}
 	
+	//vede se un nodo e' gia' presente nel grafo
 	private boolean exist(Person A) {
 		for(int i = 0; i < this.nodi; i++) {
 			if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(A.getName())) return true;
@@ -101,9 +125,8 @@ public class Grafo {
 			if(toDelete.adiacenze.get(i).getActorA().getName().equalsIgnoreCase(A.getName()))
 				collabToDelete.add(toDelete.adiacenze.get(i).getActorB());
 			else if(toDelete.adiacenze.get(i).getActorB().getName().equalsIgnoreCase(A.getName()))
-				collabToDelete.add(toDelete.adiacenze.get(i).getActorB());
+				collabToDelete.add(toDelete.adiacenze.get(i).getActorA());
 		}
-		System.out.println(collabToDelete.toString());
 		//elimina le collaborazioni per ognuna di esse
 		for(int i = 0; i < collabToDelete.size(); i++) {
 			Nodo tmp = null;
@@ -114,7 +137,9 @@ public class Grafo {
 			}
 			for(int k = 0; k < tmp.adiacenze.size(); k++) {
 				if(tmp.adiacenze.get(k).getActorA().getName().equalsIgnoreCase(A.getName()))
-					{tmp.adiacenze.remove(k); this.archi--;}
+						{tmp.adiacenze.remove(k); this.archi--;}
+				else if(tmp.adiacenze.get(k).getActorB().getName().equalsIgnoreCase(A.getName()))
+						{tmp.adiacenze.remove(k); this.archi--;}
 			}
 		}
 		//elimina gli archi relativi al nodo e lo elimina
@@ -124,17 +149,96 @@ public class Grafo {
 		this.nodi--;
 	}
 	
-	public Collaboration[] search(Person P) {
+	
+	//ritorna le collaborazioni dirette di P
+	public Person[] search(Person P) {
+		Nodo toSearch = null;
+		Person[] tmp = null;
 		for(int i = 0; i < this.nodi; i++) {
 			if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(P.getName())) {
-				Collaboration[] tmp = new Collaboration[this.grafo.get(i).adiacenze.size()];
-				for(int j = 0; j < tmp.length; j++) {
-					tmp[j] = this.grafo.get(i).adiacenze.get(j);
-				}
-				return tmp;
+				tmp = new Person[this.grafo.get(i).adiacenze.size()];
+				toSearch = this.grafo.get(i);
+				break;
 			}
 		}
-		return null;
+		for(int j = 0; j < tmp.length; j++) {
+			if(toSearch.adiacenze.get(j).getActorA().getName().equalsIgnoreCase(P.getName()))
+				tmp[j] = toSearch.adiacenze.get(j).getActorB();
+			else
+				tmp[j] = toSearch.adiacenze.get(j).getActorA();
+		}
+
+		return tmp;
+	
+	}
+	
+	public Collaboration[] getCollab(Person P) {
+		LinkedList<Collaboration> collab = null;
+		for(int i = 0; i < this.nodi; i++) {
+			if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(P.getName()))
+				{collab = this.grafo.get(i).adiacenze; break;}
+		}
+		Collaboration[] collabArray = new Collaboration[collab.size()];
+		for(int i = 0; i < collab.size(); i++) {
+			collabArray[i] = collab.get(i);
+		}
+		return collabArray;
+	}
+
+	public Person[] BFS(Person P) {
+		Nodo source = null;
+		for(int i = 0; i < this.grafo.size(); i++) {
+			if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(P.getName()))
+				{source = this.grafo.get(i); break;}
+		}
+		this.setAllFalse();
+		LinkedList<Person> teamList = new LinkedList<Person>();
+		Queue<Nodo> queue = new LinkedList<Nodo>();
+		queue.add(source);
+		source.setTrue();
+		while(queue.size() > 0) {
+			Nodo tmp = queue.remove();
+			teamList.add(tmp.vertice);
+			for(Collaboration c : tmp.adiacenze) {
+				Nodo toAdd;
+				if(c.getActorA().getName().equalsIgnoreCase(tmp.vertice.getName())) {
+					Person toAddP = c.getActorB();
+					for(int i = 0; i < this.grafo.size(); i++) {
+						if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(toAddP.getName())) {
+							toAdd = this.grafo.get(i);
+							if(!toAdd.marked) {
+								queue.add(toAdd);
+								toAdd.setTrue();
+							}
+							
+						}
+					}
+				}
+				else {
+					Person toAddP = c.getActorA();
+					for(int i = 0; i < this.grafo.size(); i++) {
+						if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(toAddP.getName())) {
+							toAdd = this.grafo.get(i);
+							if(!toAdd.marked) {
+								queue.add(toAdd);
+								toAdd.setTrue();
+							}
+							
+						}
+					}
+				}
+			}
+		}
+		Person[] team = new Person[teamList.size()];
+		for(int i = 0; i < team.length; i++) {
+			team[i] = teamList.get(i);
+		}
+		return team;
+		
+	}
+	
+	public Collaboration[] MST(Person p) {
+		
 	}
 	
 	

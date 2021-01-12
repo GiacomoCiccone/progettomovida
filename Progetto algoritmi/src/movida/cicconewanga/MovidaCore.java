@@ -26,6 +26,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 	private Dictionary<String, Movie> film;
 	private Dictionary<String, Person> person;
 	private Sort<Entry[]> sort = new Sort<Entry[]>();
+	private Grafo G;
 	
 	private MapImplementation tipoDizionario;
 	private SortingAlgorithm tipoOrdinamento;
@@ -34,7 +35,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 			throws DizionarioSconosciutoEccezione, OrdinamentoSconosciutoEccezione{
 		setMap(Dizionario);
 		setSort(Ordinamento);
-		
+		G = new Grafo();
 
 		switch (Dizionario) {
 			case ListaNonOrdinata:
@@ -230,6 +231,16 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 						alreadyExist.increaseComparse();
 					}
 				}
+				
+				for(int i1 = 0; i1 < castArray.length - 1; i1++) {
+					Person P1 = (Person) this.person.search(castArray[i1].getName().toLowerCase());
+					for(int j = i1+1; j < castArray.length; j++) {
+						Person P2 = (Person) this.person.search(castArray[j].getName().toLowerCase());
+						Collaboration tmp = new Collaboration(P1, P2);
+						G.insert(tmp, nuovoFilm);
+					}
+				}
+				
 				if(!person.Exist(nuovoDirector.getName().toLowerCase())) {
 					person.insert(nuovoDirector.getName().toLowerCase(), nuovoDirector);
 					nuovoDirector.dcreaseComparse();
@@ -294,6 +305,15 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 			for(int i = 0; i<cast.length; i++) {
 				Person p = (Person) this.person.search(cast[i].getName().toLowerCase());
 				p.dcreaseComparse();
+				Collaboration[] tmp = G.getCollab(p);
+				for(int j = 0; j <tmp.length; j++) {
+					tmp[j].removeCollab(toDelete);
+				}
+				
+				if(p.getComparse().equals(0)) {
+					this.person.delete(p.getName().toLowerCase());
+					G.delete(p);
+				}
 			}
 			Person director = (Person) this.person.search(toDelete.getDirector().getName().toLowerCase());
 			director.increaseComparse();
@@ -341,14 +361,16 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public Person[] getDirectCollaboratorsOf(Person actor) {
-		// TODO Auto-generated method stub
-		return null;
+		return G.search(actor);
+	}
+	
+	public Collaboration[] getCollab(Person actor) {
+		return G.getCollab(actor);
 	}
 
 	@Override
 	public Person[] getTeamOf(Person actor) {
-		// TODO Auto-generated method stub
-		return null;
+		return G.BFS(actor);
 	}
 
 	@Override

@@ -33,11 +33,26 @@ public class Collaboration {
 	}
 	
 	public void addCollab(Movie m) {
+		for(int i = 0; i < this.movies.size(); i++) {
+			if(this.movies.get(i).getTitle().equalsIgnoreCase(m.getTitle())) return;
+		}
 		this.movies.add(m);
 	}
 	
 	public void removeCollab(Movie m) {
-		this.movies.remove(m);
+		for(int i = 0; i < this.movies.size(); i++) {
+			if(this.movies.get(i).getTitle().equalsIgnoreCase(m.getTitle()))
+				{this.movies.remove(i); return;}
+		}
 	}
 	
+	@Override
+	public String toString() {
+		String s = "";
+		s += "Le collaborazioni tra " + this.actorA.getName() + " e " + this.actorB.getName() + " includono i film:\n";
+		for(Movie m : movies)
+			s += m.getTitle() + "\n";
+		s += "Con uno score pari a: " + this.getScore();
+		return s;
+	}
 }

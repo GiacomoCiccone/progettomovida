@@ -178,23 +178,23 @@ public class test {
 		//System.out.print(System.getProperty("user.dir"));
 		File f = new File("esempio-formato-dati.txt");
 		test.loadFromFile(f);
-		/*System.out.println(test.countMovies());
-		System.out.println(test.countPeople());
-		Movie[] allMovies = test.getAllMovies();
+		//System.out.println(test.countMovies());
+		//System.out.println(test.countPeople());
+		/*Movie[] allMovies = test.getAllMovies();
 		for(int i = 0; i<allMovies.length; i++) {
 			System.out.println(allMovies[i].toString());
-		}
-		Person[] allPerson = test.getAllPeople();
+		}*/
+		/*Person[] allPerson = test.getAllPeople();
 		for(int i = 0; i<allPerson.length; i++) {
 			System.out.println(allPerson[i].toString());
 		}*/
 		
-		Integer n = 100;
+		//Integer n = 100;
 		/*Movie[] mostRecent = test.searchMostRecentMovies(n);
 		
 		for(int i = 0; i<mostRecent.length; i++) {
 			System.out.println(mostRecent[i].toString());
-		}*/
+		}
 		
 		/*Movie[] mostVoted = test.searchMostVotedMovies(n);
 		
@@ -257,7 +257,7 @@ public class test {
 		//test.setMap(MapImplementation.ABR);
 		//test.setSort(SortingAlgorithm.MergeSort);
 		
-		System.out.println(test.deleteMovieByTitle("Cape Fear"));
+		/*System.out.println(test.deleteMovieByTitle("Cape Fear"));
 		System.out.println(test.deleteMovieByTitle("Pulp Fiction"));
 		System.out.println(test.deleteMovieByTitle("Contact"));
 		System.out.println(test.deleteMovieByTitle("Die Hard"));
@@ -267,7 +267,28 @@ public class test {
 		System.out.println(test.deleteMovieByTitle("Air Force One"));
 		
 		File f2 = new File("FileSalvato.txt");
-		test.saveToFile(f2);
+		test.saveToFile(f2);*/
+		//System.out.println(test.deleteMovieByTitle("Air Force One"));
+		//System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
+		//System.out.println(test.deleteMovieByTitle("The Fugitive"));
+		/*Person[] collaboration;
+		collaboration = test.getDirectCollaboratorsOf(test.getPersonByName("robert de niro"));
+		for(int i = 0; i < collaboration.length; i++) {
+			System.out.println(collaboration[i].toString());
+		}
+		
+		Collaboration[]	c = test.getCollab(test.getPersonByName("Michelle Pfeiffer"));
+		for(Collaboration c1 : c) {
+			System.out.println(c1.toString());
+		}*/
+		
+		Person[] team = test.getTeamOf(test.getPersonByName("toni collette"));
+		
+		for(int i = 0; i < team.length; i++) {
+			System.out.println(team[i]);
+		}
+		
+
 
 	}
 
