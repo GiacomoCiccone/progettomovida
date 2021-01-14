@@ -209,17 +209,17 @@ public class test {
 			System.out.println(mostActive[i].toString());
 		}*/
 		
-		/*Movie[] starredBy = test.searchMoviesStarredBy("Harrison Ford");
+		/*Movie[] starredBy = test.searchMoviesStarredBy("harrison ford");
 		for(int i = 0; i<starredBy.length; i++) {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
 		
-		/*Movie[] starredBy = test.searchMoviesDirectedBy("Martin Scorsese");
+		/*Movie[] starredBy = test.searchMoviesDirectedBy("christopher nolan");
 		for(int i = 0; i<starredBy.length; i++) {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
 		
-		/*Movie[] starredBy = test.searchMoviesInYear(1999);
+		/*Movie[] starredBy = test.searchMoviesInYear(2020);
 		for(int i = 0; i<starredBy.length; i++) {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
@@ -229,8 +229,8 @@ public class test {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
 		
-		//System.out.println(test.getMovieByTitle("taxi driver").toString());
-		//System.out.println(test.getPersonByName("martin scorsese").toString());
+		//System.out.println(test.getMovieByTitle("soul").toString());
+		//System.out.println(test.getPersonByName("christopher nolan").toString());
 		
 		/*System.out.println(test.countMovies());
 		System.out.println(test.countPeople());
@@ -272,27 +272,27 @@ public class test {
 		//System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
 		//System.out.println(test.deleteMovieByTitle("The Fugitive"));
 		/*Person[] collaboration;
-		collaboration = test.getDirectCollaboratorsOf(test.getPersonByName("robert de niro"));
+		collaboration = test.getDirectCollaboratorsOf(test.getPersonByName("leonardo dicaprio"));
 		for(int i = 0; i < collaboration.length; i++) {
 			System.out.println(collaboration[i].toString());
 		}
 		
-		Collaboration[]	c = test.getCollab(test.getPersonByName("Michelle Pfeiffer"));
+		Collaboration[]	c = test.getCollab(test.getPersonByName("tom hanks"));
 		for(Collaboration c1 : c) {
 			System.out.println(c1.toString());
 		}*/
 		
-		/*Person[] team = test.getTeamOf(test.getPersonByName("toni collette"));
+		/*Person[] team = test.getTeamOf(test.getPersonByName("harrison ford"));
 		
 		for(int i = 0; i < team.length; i++) {
 			System.out.println(team[i]);
 		}*/
 		
-		Collaboration[] collab = test.maximizeCollaborationsInTheTeamOf(test.getPersonByName("alan rickman"));
+		/*Collaboration[] collab = test.maximizeCollaborationsInTheTeamOf(test.getPersonByName("Harrison Ford"));
 		
 		for(int i = 0; i < collab.length; i++) {
 			System.out.println(collab[i].toString());
-		}
+		}*/
 
 
 	}
