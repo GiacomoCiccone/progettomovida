@@ -34,7 +34,10 @@ public class ABR <K extends Comparable<K>, V extends Object> implements Dictiona
 
 	@Override
 	public void clear() {
-		this.root.left = this.root.right = this.root = null;
+		if(this.root!=null)
+			this.root.left = this.root.right = this.root = null;
+		else
+			this.root = null;
 		this.size = 0;
 		
 	}

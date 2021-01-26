@@ -282,9 +282,12 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 
 	@Override
 	public void clear() {
+		Movie[] movies = this.getAllMovies();
+		for(int i = 0; i < movies.length; i++) {
+			this.deleteMovieByTitle(movies[i].getTitle());
+		}
 		this.film.clear();
 		this.person.clear();
-		
 	}
 
 	@Override

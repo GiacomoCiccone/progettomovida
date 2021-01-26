@@ -189,7 +189,7 @@ public class test {
 			System.out.println(allPerson[i].toString());
 		}*/
 		
-		//Integer n = 100;
+		Integer n = 100;
 		/*Movie[] mostRecent = test.searchMostRecentMovies(n);
 		
 		for(int i = 0; i<mostRecent.length; i++) {
@@ -208,8 +208,8 @@ public class test {
 		for(int i = 0; i<mostActive.length; i++) {
 			System.out.println(mostActive[i].toString());
 		}*/
-		
-		/*Movie[] starredBy = test.searchMoviesStarredBy("harrison ford");
+		//test.loadFromFile(f);
+		/*Movie[] starredBy = test.searchMoviesStarredBy("leonardo dicaprio");
 		for(int i = 0; i<starredBy.length; i++) {
 			System.out.println(starredBy[i].toString() + "\n");
 		}*/
@@ -257,7 +257,7 @@ public class test {
 		//test.setMap(MapImplementation.ABR);
 		//test.setSort(SortingAlgorithm.MergeSort);
 		
-		/*System.out.println(test.deleteMovieByTitle("Cape Fear"));
+		System.out.println(test.deleteMovieByTitle("Cape Fear"));
 		System.out.println(test.deleteMovieByTitle("Pulp Fiction"));
 		System.out.println(test.deleteMovieByTitle("Contact"));
 		System.out.println(test.deleteMovieByTitle("Die Hard"));
@@ -266,18 +266,18 @@ public class test {
 		System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
 		System.out.println(test.deleteMovieByTitle("Air Force One"));
 		
-		File f2 = new File("FileSalvato.txt");
+		/*File f2 = new File("FileSalvato.txt");
 		test.saveToFile(f2);*/
 		//System.out.println(test.deleteMovieByTitle("Air Force One"));
 		//System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
 		//System.out.println(test.deleteMovieByTitle("The Fugitive"));
-		/*Person[] collaboration;
-		collaboration = test.getDirectCollaboratorsOf(test.getPersonByName("leonardo dicaprio"));
+		Person[] collaboration;
+		collaboration = test.getDirectCollaboratorsOf(test.getPersonByName("harrison ford"));
 		for(int i = 0; i < collaboration.length; i++) {
 			System.out.println(collaboration[i].toString());
 		}
 		
-		Collaboration[]	c = test.getCollab(test.getPersonByName("tom hanks"));
+		/*Collaboration[]	c = test.getCollab(test.getPersonByName("tom hanks"));
 		for(Collaboration c1 : c) {
 			System.out.println(c1.toString());
 		}*/
@@ -293,7 +293,13 @@ public class test {
 		for(int i = 0; i < collab.length; i++) {
 			System.out.println(collab[i].toString());
 		}*/
-
+		/*test.clear();
+		Person p = new Person("Harrison Ford");
+		Collaboration[] collab = test.maximizeCollaborationsInTheTeamOf(p);
+		for(int i = 0; i < collab.length; i++) {
+			System.out.println(collab[i].toString());
+		}*/
+		
 
 	}
 

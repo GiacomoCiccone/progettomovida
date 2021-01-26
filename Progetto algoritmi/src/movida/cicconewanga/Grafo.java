@@ -13,6 +13,13 @@ import movida.commons.Person;
 public class Grafo {
 	
 	private class Nodo extends Object{
+		/**
+		 * La classe nodo rappresenta un elemento del grafo
+		 * Ogni nodo e' costituito da un vertice che e'una persona
+		 * da una lista di adiacenze, ovvero le collaborazioni a cui questa persona ha partecipato
+		 * marked serve per gli algoritmi di visita
+		 * dist, parent e activecollab servono come supporto per l'algoritmo di Maximum Spanning Tree
+		 */
 		
 		public Person vertice;
 		public LinkedList<Collaboration> adiacenze;
@@ -51,16 +58,25 @@ public class Grafo {
 		}
 		
 	}
-	
+	/**
+	 * La classe grafo e' una linkedlist di nodi
+	 * Tiene traccia del numero di nodi e di archi (anche se non sono necessari questi campi)
+	 */
 	
 	private LinkedList<Nodo> grafo = new LinkedList<Nodo>();
 	int nodi = 0;
 	int archi = 0;
 	
+	/*
+	 * Funzione necessaria da chiamare all'inizio degli algoritmi di visita
+	 */
 	private void setAllFalse() {
 		for(Nodo n : grafo) n.marked = false;
 	}
 	
+	/*
+	 * Funzione necessaria da chiamare all'inizio dell'algoritmo di MST
+	 */
 	private void setToInfinity() {
 		for(Nodo n : grafo) n.dist = Double.NEGATIVE_INFINITY;
 	}
@@ -73,7 +89,17 @@ public class Grafo {
 	public int getArchi() {
 		return this.archi/2;
 	}
+
 	
+	/*
+	 * Inserisce la collaborazione c relativa al film m nel grafo
+	 * Prende i due attori della collaborazione e per ognuno di essi
+	 * controlla prima se e' presente un nodo relativo a tale attore
+	 * se non e' presente lo inserisce con aggiungendo la collaborazione c alle sue adiacenze
+	 * se invece e' presente trova il relativo nodo nel grafo e scorre le sue adiacenze
+	 * e vede se esiste gia una collaborazione con l'altro attore e se esiste aggiunge semplicemente il film m alle loro collaborazioni
+	 * altrimenti crea un nuovo "arco"
+	 */
 	public void insert(Collaboration c, Movie m) {
 		Person A = c.getActorA();
 		Person B = c.getActorB();
@@ -132,7 +158,10 @@ public class Grafo {
 		}
 	}
 	
-	//vede se un nodo e' gia' presente nel grafo
+	/*
+	 * Controlla se esiste un nodo con vertice A
+	 * Se esiste ritorna true altrimenti false
+	 */
 	private boolean exist(Person A) {
 		for(int i = 0; i < this.nodi; i++) {
 			if(this.grafo.get(i).vertice.getName().equalsIgnoreCase(A.getName())) return true;
@@ -165,6 +194,7 @@ public class Grafo {
 					{tmp = this.grafo.get(j);
 					break;}
 			}
+			//trova la collaborazione da eliminare
 			for(int k = 0; k < tmp.adiacenze.size(); k++) {
 				if(tmp.adiacenze.get(k).getActorA().getName().equalsIgnoreCase(A.getName()))
 						{tmp.adiacenze.remove(k); this.archi--;}
@@ -180,7 +210,7 @@ public class Grafo {
 	}
 	
 	
-	//ritorna le collaborazioni dirette di P
+	//ritorna le persone con collaborazioni dirette a P
 	public Person[] search(Person P) {
 		Nodo toSearch = null;
 		Person[] tmp = null;
@@ -214,7 +244,11 @@ public class Grafo {
 		}
 		return collabArray;
 	}
-
+	
+	/*
+	 * Algoritmo di visita basato su BFS
+	 * ritorna tutte le persone legate da una collaborazione diretta o indiretta a p
+	 */
 	public Person[] BFS(Person P) {
 		Nodo source = null;
 		for(int i = 0; i < this.grafo.size(); i++) {
@@ -267,9 +301,14 @@ public class Grafo {
 		
 	}
 	
+	/*
+	 * Algoritmo di Maximum Spanning Tree
+	 * Ritorna un array di collaborazioni di costo massimo per la persona p
+	 */
 	public Collaboration[] MST(Person p) {
 		LinkedList<Collaboration> collab = new LinkedList<Collaboration>();
 		Nodo source = this.cercaNodo(p);
+		if(source == null) return null;
 		this.setAllFalse();
 		this.setToInfinity();
 		Queue<Nodo> maxQueue = new PriorityQueue<Nodo>(new Grafo.sortByVotes().reversed());
@@ -337,7 +376,9 @@ public class Grafo {
 		return null;
 	}
 	
-	
+	/**
+	 *Comparator per la priorty queue in base ai voti
+	 */
 	public static class sortByVotes implements Comparator<Nodo>{
 		
 		@Override

@@ -113,7 +113,8 @@ public class ListaNonOrdinata <K extends Comparable<K>, V extends Object> implem
 	
 	@Override
 	public void clear() {
-		this.list = this.list.prev = this.list.next = null;
+		if(this.list != null)
+			this.list = this.list.prev = this.list.next = null;
 		this.size = 0;
 	}
 	

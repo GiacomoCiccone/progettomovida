@@ -8,11 +8,24 @@ import java.util.Comparator;
 
 
 public class Sort <T> {
+	/**
+	 * Classe che implementa gli algoritmi di ordinamento
+	 * e gestisce il modo in cui vogliamo ordinare gli elementi
+	 */
 	
+	/**
+	 * Questa funzione si usa per decidere quale algoritmo di ordinamento utilizzare
+	 * In base al valore che passiamo chiama selectionSort oppure mergeSort
+	 */
 	public <T> void selectedSort(T V[], SortingAlgorithm algo, Comparator<T> comparator) {
 		if(algo.equals(SortingAlgorithm.SelectionSort)) selectionSort(V, comparator);
 		else mergeSort(V, comparator);
 	}
+	
+	/**
+	 * Ordina gli elementi di un vettore in O(N^2)
+	 * Fa uso di un comparator per decidere in base a cosa ordinare
+	 */
 	private static <T> void selectionSort(T V[], Comparator<T> comparator) {
 		for (int i = 0; i < V.length - 1; i++) {
 			int m = i;
@@ -26,7 +39,11 @@ public class Sort <T> {
 			}
 		}
 	}
-		
+	
+	/**
+	 * Ordina gli elementi ricorsivamente in tempo O(NlogN) e spazio O(N)
+	 * Fa uso di un comparator per decidere in base a cosa ordinare
+	 */
 	private static <T> void mergeSort(T V[], Comparator<T> comparator) {
 		mergeRec(V, comparator, 0, V.length -1);
 		
@@ -55,9 +72,15 @@ public class Sort <T> {
 		else for (int j = i2; j <= f2; j++, i++) X[i] = V[j];
 		for (int t = 0; k <= f2; k++, t++) V[k] = X[t];
 	}
-		
+	
+	
+	
+	
+	
 	public static class sortMovieByTitle implements Comparator<Entry>{
-		
+		/**
+		 * Classe che estende comparator per ordinare film in base al titolo
+		 */
 		@Override
 		public int compare(Entry o1, Entry o2) {
 			Movie a, b;
@@ -69,7 +92,9 @@ public class Sort <T> {
 	}
 		
 	public static class sortMovieByYear implements Comparator<Entry>{
-			
+		/**
+		 * Classe che estende comparator per ordinare film in base all'anno di uscita
+		 */	
 		@Override
 		public int compare(Entry o1, Entry o2) {
 			Movie a, b;
@@ -81,7 +106,9 @@ public class Sort <T> {
 	}
 	
 	public static class sortMovieByVotes implements Comparator<Entry>{
-		
+		/**
+		 * Classe che estende comparator per ordinare film in base ai voti
+		 */
 		@Override
 		public int compare(Entry o1, Entry o2) {
 			Movie a, b;
@@ -93,7 +120,9 @@ public class Sort <T> {
 	}
 	
 	public static class sortByKey implements Comparator<Entry>{
-		
+		/**
+		 * Classe che estende comparator per un oggetto Entry in base alla sua chiave
+		 */
 		@Override
 		public int compare(Entry x1, Entry x2) {
 				return ( x1.getKey()).compareTo(x2.getKey() );
@@ -102,7 +131,9 @@ public class Sort <T> {
 	}
 	
 	public static class sortPersonByActivities implements Comparator<Entry>{
-		
+		/**
+		 * Classe che estende comparator per persone in base al numero di comparse
+		 */
 		@Override
 		public int compare(Entry o1, Entry o2) {
 			Person a, b;
