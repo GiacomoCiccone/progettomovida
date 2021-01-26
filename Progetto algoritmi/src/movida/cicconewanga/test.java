@@ -189,7 +189,7 @@ public class test {
 			System.out.println(allPerson[i].toString());
 		}*/
 		
-		Integer n = 100;
+		//Integer n = 100;
 		/*Movie[] mostRecent = test.searchMostRecentMovies(n);
 		
 		for(int i = 0; i<mostRecent.length; i++) {
@@ -257,25 +257,25 @@ public class test {
 		//test.setMap(MapImplementation.ABR);
 		//test.setSort(SortingAlgorithm.MergeSort);
 		
-		System.out.println(test.deleteMovieByTitle("Cape Fear"));
+		/*System.out.println(test.deleteMovieByTitle("Cape Fear"));
 		System.out.println(test.deleteMovieByTitle("Pulp Fiction"));
 		System.out.println(test.deleteMovieByTitle("Contact"));
 		System.out.println(test.deleteMovieByTitle("Die Hard"));
 		System.out.println(test.deleteMovieByTitle("The Sixth Sense"));
 		System.out.println(test.deleteMovieByTitle("Scarface"));
 		System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
-		System.out.println(test.deleteMovieByTitle("Air Force One"));
+		System.out.println(test.deleteMovieByTitle("Air Force One"));*/
 		
 		/*File f2 = new File("FileSalvato.txt");
 		test.saveToFile(f2);*/
 		//System.out.println(test.deleteMovieByTitle("Air Force One"));
 		//System.out.println(test.deleteMovieByTitle("What Lies Beneath"));
 		//System.out.println(test.deleteMovieByTitle("The Fugitive"));
-		Person[] collaboration;
+		/*Person[] collaboration;
 		collaboration = test.getDirectCollaboratorsOf(test.getPersonByName("harrison ford"));
 		for(int i = 0; i < collaboration.length; i++) {
 			System.out.println(collaboration[i].toString());
-		}
+		}*/
 		
 		/*Collaboration[]	c = test.getCollab(test.getPersonByName("tom hanks"));
 		for(Collaboration c1 : c) {
