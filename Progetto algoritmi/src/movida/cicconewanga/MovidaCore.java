@@ -78,6 +78,38 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch, IMovidaConfig, IMov
 		}
 		else {
 			this.tipoDizionario = m;
+			
+			if(this.person != null && this.film != null) {
+				//test
+				Dictionary<String, Movie> filmTmp = null;
+				Dictionary<String, Person> personTmp = null;
+				switch (m) {
+				case ListaNonOrdinata:
+					filmTmp = new ListaNonOrdinata<String, Movie>(true);
+					personTmp = new ListaNonOrdinata<String, Person>();
+					break;
+				case ABR:
+					filmTmp = new ABR<String, Movie>();
+					personTmp = new ABR<String, Person>();
+					break;
+				default:
+					break;				
+				}
+				Person[] allPerson = this.getAllPeople();
+				Movie[] allMovies = this.getAllMovies();
+				
+				for(int i = 0; i < this.film.getSize(); i++) {
+					filmTmp.insert(allMovies[i].getTitle().toLowerCase(), allMovies[i]);
+				}
+				for(int i = 0; i < this.person.getSize(); i++) {
+					personTmp.insert(allPerson[i].getName().toLowerCase(), allPerson[i]);
+				}
+				this.film.clear();
+				this.person.clear();
+				this.film = filmTmp;
+				this.person = personTmp;
+				//test
+			}
 			return true;
 		}
 	}
